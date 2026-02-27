@@ -1,0 +1,73 @@
+name: core-module
+version: 1
+description: Shared library module in sogo-db-core — types, utilities, and engines
+
+structure:
+  location: "packages/core/src/**/*.ts"
+  naming: "{domain}.ts — one file per concern (types, utils, formulas, rollups, etc.)"
+  exports:
+    - "Named exports only, no default exports"
+    - "Re-export everything from packages/core/src/index.ts barrel"
+
+conventions:
+  - Pure functions only — no side effects, no I/O in core logic modules
+  - File I/O utilities are the exception — isolated in their own module
+  - All functions must be fully typed — no `any` except in DBRecord index signature
+  - Match the existing fork's function signatures exactly (specs/reference/database.ts)
+  - Use node:fs/promises for file I/O (not sync)
+  - Use node:path and node:os for path resolution
+  - UUID generation via crypto.randomUUID()
+
+example: |
+  /**
+   * ---
+   * @anchor: .patterns/core-module
+   * @spec: specs/core-library.md#utility-functions
+   * @task: TASK-001
+   * @validated: null
+   * ---
+   */
+  export function getRecordTitle(record: DBRecord, schema: Field[]): string {
+    const titleField = schema.find(f => f.type === 'text');
+    if (!titleField) { return 'Untitled'; }
+    const val = record[titleField.id];
+    return val !== null && val !== undefined && val !== '' ? String(val) : 'Untitled';
+  }
+
+implementations:
+  - path: packages/core/src/types.ts
+    task: TASK-002
+    validated: 2026-02-27
+  - path: packages/core/src/utils.ts
+    task: TASK-003
+    validated: 2026-02-27
+  - path: packages/core/src/sort-filter.ts
+    task: TASK-004
+    validated: 2026-02-27
+  - path: packages/core/src/formula.ts
+    task: TASK-004
+    validated: 2026-02-27
+  - path: packages/core/src/rollup.ts
+    task: TASK-004
+    validated: 2026-02-27
+  - path: packages/core/src/io.ts
+    task: TASK-005
+    validated: 2026-02-27
+  - path: packages/core/src/relations.ts
+    task: TASK-005
+    validated: 2026-02-27
+  - path: packages/core/src/migration.ts
+    task: TASK-006
+    validated: 2026-02-27
+  - path: packages/core/src/templates.ts
+    task: TASK-006
+    validated: 2026-02-27
+  - path: packages/core/src/csv.ts
+    task: TASK-006
+    validated: 2026-02-27
+  - path: packages/core/src/index.ts
+    task: TASK-002
+    validated: 2026-02-27
+
+usage_count: 11
+last_used: 2026-02-27

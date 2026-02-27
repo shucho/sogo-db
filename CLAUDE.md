@@ -1,16 +1,24 @@
-# Project: [Name]
+# Project: sogo-db
 
 ## Stack
-- [Framework/language]
-- [Database]
-- [Key libraries]
+- TypeScript (strict, ESM-first)
+- pnpm workspaces monorepo
+- tsup (build), vitest (test)
+- @modelcontextprotocol/sdk (MCP server)
+- Zod (schema validation)
+
+## Packages
+- `packages/core` — sogo-db-core: types, utilities, engines (shared)
+- `packages/mcp-server` — sogo-mcp-server: MCP server for AI agent access
+- `packages/extension` — sogo-db VS Code extension (future)
 
 ## Commands
 ```bash
-# npm run dev          # Dev server
-# npm run typecheck    # MUST pass before commit
-# npm run lint         # MUST pass before commit
-# npm run test         # MUST pass before commit
+pnpm install             # Install all workspace deps
+pnpm -r build            # Build all packages
+pnpm -r typecheck        # MUST pass before commit
+pnpm -r lint             # MUST pass before commit
+pnpm -r test             # MUST pass before commit
 ```
 
 ## Framework
@@ -24,9 +32,9 @@
 
 ## Quick Patterns
 <!-- One-line reminders only. Details in .patterns/ -->
-- API routes: Zod schema at top, Response.json() returns
-- DB mutations: Soft delete via deleted_at column
-- UI components: testID on all interactive elements
+- core-module: Pure functions, named exports, re-export from index.ts barrel
+- mcp-tool: One file per tool, Zod input schema, field name resolution
+- npm-package: tsup build, ESM+CJS, vitest tests
 
 ## Conventions
 - Frontmatter: `@anchor`, `@spec`, `@task`, `@validated` on every source file

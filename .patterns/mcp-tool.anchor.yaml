@@ -1,0 +1,86 @@
+name: mcp-tool
+version: 1
+description: MCP server tool handler for sogo-mcp-server
+
+structure:
+  location: "packages/mcp-server/src/tools/*.ts"
+  naming: "{toolName}.ts — one file per tool"
+  exports:
+    - "Named export: tool definition object with name, description, inputSchema, handler"
+    - "Register in packages/mcp-server/src/index.ts"
+
+conventions:
+  - Each tool file exports a function that registers the tool with the MCP server
+  - Input schema uses Zod for validation
+  - Field names in inputs are resolved to field IDs before processing
+  - Field IDs in outputs are resolved back to field names
+  - Errors return structured { error: string } messages, not thrown exceptions
+  - All database reads go through core library's readDatabaseFile
+  - All database writes go through core library's writeDatabaseFile
+  - Use @modelcontextprotocol/sdk for server setup
+
+example: |
+  /**
+   * ---
+   * @anchor: .patterns/mcp-tool
+   * @spec: specs/mcp-server.md#tool-list-databases
+   * @task: TASK-005
+   * @validated: null
+   * ---
+   */
+  import { z } from 'zod';
+
+  export const listDatabasesTool = {
+    name: 'list_databases',
+    description: 'List all databases (global + workspace) with schemas',
+    inputSchema: z.object({}),
+    handler: async (args, context) => {
+      const databases = await context.scanAll();
+      return databases.map(({ db, scope }) => ({
+        id: db.id,
+        name: db.name,
+        scope,
+        fields: db.schema.length,
+        records: db.records.length,
+        views: db.views.map(v => v.name),
+      }));
+    },
+  };
+
+implementations:
+  - path: packages/mcp-server/src/context.ts
+    task: TASK-008
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/fieldResolver.ts
+    task: TASK-013
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/listDatabases.ts
+    task: TASK-008
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/getDatabaseSchema.ts
+    task: TASK-008
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/listRecords.ts
+    task: TASK-009
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/createRecord.ts
+    task: TASK-010
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/updateRecord.ts
+    task: TASK-010
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/deleteRecord.ts
+    task: TASK-010
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/tools/searchRecords.ts
+    task: TASK-011
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/resources.ts
+    task: TASK-012
+    validated: 2026-02-27
+  - path: packages/mcp-server/src/index.ts
+    task: TASK-008
+    validated: 2026-02-27
+
+usage_count: 11
+last_used: 2026-02-27

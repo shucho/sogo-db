@@ -1,0 +1,52 @@
+name: npm-package
+version: 1
+description: npm package scaffold within the monorepo
+
+structure:
+  location: "packages/{package-name}/"
+  naming: "package.json name is @sogo/{package-name}"
+  exports:
+    - "Main entry: dist/index.js (compiled)"
+    - "Types entry: dist/index.d.ts"
+    - "Source entry: src/index.ts"
+
+conventions:
+  - TypeScript with strict mode
+  - Build with tsup (esbuild-based, fast, zero-config for libraries)
+  - Output ESM + CJS dual format
+  - Source in src/, output in dist/
+  - Tests in __tests__/ or *.test.ts co-located
+  - Vitest for testing
+  - package.json scripts: build, dev, test, typecheck, lint
+  - Workspace references via "workspace:*" in package.json
+
+example: |
+  // packages/core/package.json
+  {
+    "name": "sogo-db-core",
+    "version": "0.1.0",
+    "type": "module",
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+      "build": "tsup",
+      "dev": "tsup --watch",
+      "test": "vitest run",
+      "typecheck": "tsc --noEmit"
+    }
+  }
+
+implementations:
+  - path: packages/core/package.json
+    task: TASK-001
+    validated: 2026-02-27
+  - path: packages/mcp-server/package.json
+    task: TASK-001
+    validated: 2026-02-27
+  - path: packages/mcp-server/bin/sogo-mcp-server.js
+    task: TASK-015
+    validated: 2026-02-27
+
+usage_count: 3
+last_used: 2026-02-27
