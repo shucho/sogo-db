@@ -7,6 +7,7 @@
  * ---
  */
 
+import { homedir } from 'node:os';
 import { scanAll, readDatabaseFile, writeDatabaseFile, getGlobalDatabasePath } from 'sogo-db-core';
 import type { Database } from 'sogo-db-core';
 
@@ -16,10 +17,15 @@ export interface ServerContext {
 	scanDepth: number;
 }
 
+function expandTilde(p: string): string {
+	return p.startsWith('~') ? p.replace('~', homedir()) : p;
+}
+
 export function createContext(): ServerContext {
+	const raw = process.env.SOGO_GLOBAL_PATH;
 	return {
-		globalPath: process.env.SOGO_GLOBAL_PATH ?? getGlobalDatabasePath(),
-		workspacePath: process.env.SOGO_WORKSPACE_PATH ?? process.cwd(),
+		globalPath: raw ? expandTilde(raw) : getGlobalDatabasePath(),
+		workspacePath: expandTilde(process.env.SOGO_WORKSPACE_PATH ?? process.cwd()),
 		scanDepth: parseInt(process.env.SOGO_SCAN_DEPTH ?? '3', 10),
 	};
 }
