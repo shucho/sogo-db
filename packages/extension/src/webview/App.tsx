@@ -22,7 +22,7 @@ import { Spinner } from './components/shared/Spinner.js';
 import { EmptyState } from './components/shared/EmptyState.js';
 
 export function App() {
-	const { database, activeView, processedRecords, loading } = useDatabase();
+	const { database, activeView, processedRecords, relationTitles, loading } = useDatabase();
 	const [editingRecordId, setEditingRecordId] = useState<string | null>(null);
 	const [showSchemaEditor, setShowSchemaEditor] = useState(false);
 
@@ -41,15 +41,15 @@ export function App() {
 
 		switch (activeView.type) {
 			case 'table':
-				return <TableView database={database} view={activeView} records={processedRecords} />;
+				return <TableView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
 			case 'kanban':
-				return <KanbanView database={database} view={activeView} records={processedRecords} />;
+				return <KanbanView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
 			case 'calendar':
-				return <CalendarView database={database} view={activeView} records={processedRecords} />;
+				return <CalendarView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
 			case 'gallery':
-				return <GalleryView database={database} view={activeView} records={processedRecords} />;
+				return <GalleryView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
 			case 'list':
-				return <ListView database={database} view={activeView} records={processedRecords} />;
+				return <ListView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
 			default:
 				return <EmptyState title={`Unknown view type: ${activeView.type}`} />;
 		}
@@ -87,6 +87,7 @@ export function App() {
 				<RecordEditor
 					record={editingRecord}
 					database={database}
+					relationTitles={relationTitles}
 					onClose={() => setEditingRecordId(null)}
 				/>
 			)}

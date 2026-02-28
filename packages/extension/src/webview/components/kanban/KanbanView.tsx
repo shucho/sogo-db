@@ -25,6 +25,7 @@ interface KanbanViewProps {
 	database: Database;
 	view: DBView;
 	records: DBRecord[];
+	relationTitles?: Record<string, string>;
 }
 
 export function KanbanView({ database, view, records }: KanbanViewProps) {

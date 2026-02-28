@@ -16,10 +16,11 @@ import { ConfirmDialog } from '../shared/ConfirmDialog.js';
 interface RecordEditorProps {
 	record: DBRecord;
 	database: Database;
+	relationTitles?: Record<string, string>;
 	onClose: () => void;
 }
 
-export function RecordEditor({ record, database, onClose }: RecordEditorProps) {
+export function RecordEditor({ record, database, relationTitles, onClose }: RecordEditorProps) {
 	const [confirmDelete, setConfirmDelete] = useState(false);
 
 	function handleChange(fieldId: string, value: string | number | boolean | string[] | null) {
@@ -69,6 +70,7 @@ export function RecordEditor({ record, database, onClose }: RecordEditorProps) {
 							key={field.id}
 							field={field}
 							value={record[field.id]}
+							relationTitles={relationTitles}
 							onChange={(v) => handleChange(field.id, v)}
 						/>
 					))}
@@ -91,10 +93,12 @@ export function RecordEditor({ record, database, onClose }: RecordEditorProps) {
 function FieldEditor({
 	field,
 	value,
+	relationTitles,
 	onChange,
 }: {
 	field: Field;
 	value: string | number | boolean | string[] | null | undefined;
+	relationTitles?: Record<string, string>;
 	onChange: (value: string | number | boolean | string[] | null) => void;
 }) {
 	const isComputed = field.type === 'formula' || field.type === 'rollup' || field.type === 'createdAt' || field.type === 'lastEditedAt';
@@ -111,7 +115,7 @@ function FieldEditor({
 			{isComputed ? (
 				<div className="text-xs opacity-50 italic">{String(value ?? '—')} (computed)</div>
 			) : (
-				<FieldInput field={field} value={value} onChange={onChange} inputStyle={inputStyle} />
+				<FieldInput field={field} value={value} relationTitles={relationTitles} onChange={onChange} inputStyle={inputStyle} />
 			)}
 		</div>
 	);
@@ -120,11 +124,13 @@ function FieldEditor({
 function FieldInput({
 	field,
 	value,
+	relationTitles,
 	onChange,
 	inputStyle,
 }: {
 	field: Field;
 	value: string | number | boolean | string[] | null | undefined;
+	relationTitles?: Record<string, string>;
 	onChange: (value: string | number | boolean | string[] | null) => void;
 	inputStyle: React.CSSProperties;
 }) {
@@ -222,8 +228,23 @@ function FieldInput({
 		case 'relation': {
 			const ids = Array.isArray(value) ? value : [];
 			return (
-				<div className="text-xs opacity-60">
-					{ids.length > 0 ? `${ids.length} linked records` : 'No linked records'}
+				<div className="space-y-1">
+					{ids.length > 0 ? (
+						ids.map((id) => (
+							<div
+								key={id}
+								className="inline-block mr-1 mb-1 px-2 py-0.5 rounded text-xs"
+								style={{
+									backgroundColor: 'var(--vscode-badge-background)',
+									color: 'var(--vscode-badge-foreground)',
+								}}
+							>
+								{relationTitles?.[id] ?? id.slice(0, 8)}
+							</div>
+						))
+					) : (
+						<span className="text-xs opacity-40">No linked records</span>
+					)}
 				</div>
 			);
 		}

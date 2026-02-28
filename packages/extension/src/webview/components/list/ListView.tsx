@@ -16,6 +16,7 @@ interface ListViewProps {
 	database: Database;
 	view: DBView;
 	records: DBRecord[];
+	relationTitles?: Record<string, string>;
 }
 
 export function ListView({ database, view, records }: ListViewProps) {

@@ -25,9 +25,10 @@ interface TableViewProps {
 	database: Database;
 	view: DBView;
 	records: DBRecord[];
+	relationTitles: Record<string, string>;
 }
 
-export function TableView({ database, view, records }: TableViewProps) {
+export function TableView({ database, view, records, relationTitles }: TableViewProps) {
 	const parentRef = useRef<HTMLDivElement>(null);
 	const [editingCell, setEditingCell] = useState<{ recordId: string; fieldId: string } | null>(null);
 
@@ -68,6 +69,7 @@ export function TableView({ database, view, records }: TableViewProps) {
 							record={record}
 							field={field}
 							database={database}
+							relationTitles={relationTitles}
 							onStartEdit={() => setEditingCell({ recordId: record.id, fieldId: field.id })}
 						/>
 					);

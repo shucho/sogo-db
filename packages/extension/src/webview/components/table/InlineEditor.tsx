@@ -146,6 +146,11 @@ export function InlineEditor({ record, field, onSave, onCancel }: InlineEditorPr
 			);
 		}
 
+		case 'relation':
+			// Relations are not editable inline — use record editor
+			onCancel();
+			return null;
+
 		default:
 			return (
 				<input

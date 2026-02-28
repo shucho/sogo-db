@@ -11,6 +11,7 @@
  */
 
 import * as vscode from 'vscode';
+import { getRecordTitle } from 'sogo-db-core';
 import { EDITOR_VIEW_TYPE } from './constants.js';
 import type { DatabaseManager, DatabaseEntry } from './DatabaseManager.js';
 import type { DatabaseSnapshot, HostMessage, WebviewCommand, ThemeUpdate } from './protocol.js';
@@ -151,10 +152,37 @@ export class DatabaseEditorProvider implements vscode.CustomTextEditorProvider {
 		activeViewId: string,
 	): void {
 		const processedRecords = this.manager.getProcessedRecords(entry.db.id, activeViewId);
-		const allDatabases = this.manager.getAll().map((e) => ({
+		const allEntries = this.manager.getAll();
+		const allDatabases = allEntries.map((e) => ({
 			id: e.db.id,
 			name: e.db.name,
 		}));
+
+		// Build relation title lookup: collect all referenced record IDs
+		// across relation fields, then resolve each to its display title
+		const relationTitles: Record<string, string> = {};
+		const relationFields = entry.db.schema.filter((f) => f.type === 'relation');
+		if (relationFields.length > 0) {
+			const referencedIds = new Set<string>();
+			for (const record of entry.db.records) {
+				for (const field of relationFields) {
+					const val = record[field.id];
+					if (Array.isArray(val)) {
+						for (const id of val) referencedIds.add(id);
+					}
+				}
+			}
+			// Resolve each ID by searching all databases
+			for (const id of referencedIds) {
+				for (const other of allEntries) {
+					const found = other.db.records.find((r) => r.id === id);
+					if (found) {
+						relationTitles[id] = getRecordTitle(found, other.db.schema);
+						break;
+					}
+				}
+			}
+		}
 
 		const msg: DatabaseSnapshot = {
 			type: 'snapshot',
@@ -162,6 +190,7 @@ export class DatabaseEditorProvider implements vscode.CustomTextEditorProvider {
 			activeViewId,
 			processedRecords,
 			allDatabases,
+			relationTitles,
 		};
 		webview.postMessage(msg);
 	}

@@ -18,6 +18,7 @@ export interface DatabaseState {
 	activeView: DBView | null;
 	processedRecords: DBRecord[];
 	allDatabases: Array<{ id: string; name: string }>;
+	relationTitles: Record<string, string>;
 	loading: boolean;
 }
 
@@ -28,6 +29,7 @@ export function useDatabase(): DatabaseState {
 		activeView: null,
 		processedRecords: [],
 		allDatabases: [],
+		relationTitles: {},
 		loading: true,
 	});
 
@@ -42,6 +44,7 @@ export function useDatabase(): DatabaseState {
 					activeView,
 					processedRecords: msg.processedRecords,
 					allDatabases: msg.allDatabases,
+					relationTitles: msg.relationTitles ?? {},
 					loading: false,
 				});
 			}

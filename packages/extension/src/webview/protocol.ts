@@ -21,6 +21,8 @@ export interface DatabaseSnapshot {
 	activeViewId: string;
 	processedRecords: DBRecord[];
 	allDatabases: Array<{ id: string; name: string }>;
+	/** Pre-resolved map of record ID → display title for relation fields */
+	relationTitles: Record<string, string>;
 }
 
 export interface ThemeUpdate {

@@ -19,6 +19,7 @@ interface CalendarViewProps {
 	database: Database;
 	view: DBView;
 	records: DBRecord[];
+	relationTitles?: Record<string, string>;
 }
 
 export function CalendarView({ database, view, records }: CalendarViewProps) {

@@ -16,6 +16,7 @@ interface GalleryViewProps {
 	database: Database;
 	view: DBView;
 	records: DBRecord[];
+	relationTitles?: Record<string, string>;
 }
 
 export function GalleryView({ database, view, records }: GalleryViewProps) {

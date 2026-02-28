@@ -15,10 +15,11 @@ interface TableCellProps {
 	record: DBRecord;
 	field: Field;
 	database: Database;
+	relationTitles?: Record<string, string>;
 	onStartEdit: () => void;
 }
 
-export function TableCell({ record, field, database, onStartEdit }: TableCellProps) {
+export function TableCell({ record, field, database, relationTitles, onStartEdit }: TableCellProps) {
 	const value = record[field.id];
 	const displayValue = getFieldDisplayValue(record, field.id, database.schema, database);
 
@@ -56,6 +57,17 @@ export function TableCell({ record, field, database, onStartEdit }: TableCellPro
 						<Badge key={v} label={v} color={getFieldOptionColor(field, v)} />
 					))}
 					{values.length === 0 && <span className="opacity-30">&mdash;</span>}
+				</div>
+			);
+		}
+		case 'relation': {
+			const ids = Array.isArray(value) ? value : [];
+			return (
+				<div className="flex gap-0.5 flex-wrap cursor-pointer" onClick={handleClick}>
+					{ids.map((id) => (
+						<Badge key={id} label={relationTitles?.[id] ?? id.slice(0, 8)} color="#4b5563" />
+					))}
+					{ids.length === 0 && <span className="opacity-30">&mdash;</span>}
 				</div>
 			);
 		}
