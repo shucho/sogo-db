@@ -1,0 +1,22 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "node esbuild.mjs",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "watch",
+			"type": "shell",
+			"command": "node esbuild.mjs --watch",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

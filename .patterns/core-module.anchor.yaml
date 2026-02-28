@@ -68,6 +68,30 @@ implementations:
   - path: packages/core/src/index.ts
     task: TASK-002
     validated: 2026-02-27
+  - path: packages/extension/src/host/constants.ts
+    task: TASK-017
+    validated: 2026-02-27
+  - path: packages/extension/src/host/protocol.ts
+    task: TASK-017
+    validated: 2026-02-27
+  - path: packages/extension/src/host/DatabaseManager.ts
+    task: TASK-017
+    validated: 2026-02-27
+  - path: packages/extension/src/host/DatabaseTreeProvider.ts
+    task: TASK-018
+    validated: 2026-02-27
+  - path: packages/extension/src/host/DatabaseFileWatcher.ts
+    task: TASK-019
+    validated: 2026-02-27
+  - path: packages/extension/src/host/DatabaseEditorProvider.ts
+    task: TASK-020
+    validated: 2026-02-27
+  - path: packages/extension/src/host/commands.ts
+    task: TASK-034
+    validated: 2026-02-27
+  - path: packages/extension/src/host/McpServerManager.ts
+    task: TASK-035
+    validated: 2026-02-27
 
-usage_count: 11
+usage_count: 19
 last_used: 2026-02-27

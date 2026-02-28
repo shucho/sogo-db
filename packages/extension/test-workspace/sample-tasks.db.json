@@ -1,0 +1,127 @@
+{
+	"id": "test-db-001",
+	"name": "Sample Tasks",
+	"scope": "workspace",
+	"schema": [
+		{ "id": "f-title", "name": "Title", "type": "text" },
+		{ "id": "f-status", "name": "Status", "type": "status" },
+		{ "id": "f-priority", "name": "Priority", "type": "select", "options": ["Low", "Medium", "High", "Critical"] },
+		{ "id": "f-due", "name": "Due Date", "type": "date" },
+		{ "id": "f-effort", "name": "Effort", "type": "number" },
+		{ "id": "f-done", "name": "Completed", "type": "checkbox" },
+		{ "id": "f-tags", "name": "Tags", "type": "multiselect", "options": ["frontend", "backend", "docs", "bug", "feature"] },
+		{ "id": "f-url", "name": "Link", "type": "url" }
+	],
+	"views": [
+		{
+			"id": "v-table",
+			"name": "All Tasks",
+			"type": "table",
+			"sort": [{ "fieldId": "f-due", "direction": "asc" }],
+			"filter": [],
+			"hiddenFields": []
+		},
+		{
+			"id": "v-kanban",
+			"name": "Board",
+			"type": "kanban",
+			"groupBy": "f-status",
+			"sort": [],
+			"filter": [],
+			"hiddenFields": []
+		},
+		{
+			"id": "v-calendar",
+			"name": "Calendar",
+			"type": "calendar",
+			"groupBy": "f-due",
+			"sort": [],
+			"filter": [],
+			"hiddenFields": []
+		},
+		{
+			"id": "v-gallery",
+			"name": "Gallery",
+			"type": "gallery",
+			"sort": [],
+			"filter": [],
+			"hiddenFields": []
+		},
+		{
+			"id": "v-list",
+			"name": "List",
+			"type": "list",
+			"sort": [],
+			"filter": [],
+			"hiddenFields": []
+		}
+	],
+	"records": [
+		{
+			"id": "rec-001",
+			"f-title": "Set up CI pipeline",
+			"f-status": "Done",
+			"f-priority": "High",
+			"f-due": "2026-02-20",
+			"f-effort": 5,
+			"f-done": true,
+			"f-tags": ["backend"],
+			"f-url": "https://github.com/example/repo"
+		},
+		{
+			"id": "rec-002",
+			"f-title": "Design landing page",
+			"f-status": "In progress",
+			"f-priority": "Medium",
+			"f-due": "2026-03-01",
+			"f-effort": 8,
+			"f-done": false,
+			"f-tags": ["frontend", "feature"],
+			"f-url": null
+		},
+		{
+			"id": "rec-003",
+			"f-title": "Write API docs",
+			"f-status": "Not started",
+			"f-priority": "Low",
+			"f-due": "2026-03-15",
+			"f-effort": 3,
+			"f-done": false,
+			"f-tags": ["docs"],
+			"f-url": null
+		},
+		{
+			"id": "rec-004",
+			"f-title": "Fix login redirect bug",
+			"f-status": "Done",
+			"f-priority": "Critical",
+			"f-due": "2026-02-28",
+			"f-effort": 2,
+			"f-done": true,
+			"f-tags": ["backend", "bug"],
+			"f-url": null
+		},
+		{
+			"id": "rec-005",
+			"f-title": "Add dark mode toggle",
+			"f-status": "Not started",
+			"f-priority": "Medium",
+			"f-due": "2026-03-10",
+			"f-effort": 4,
+			"f-done": false,
+			"f-tags": ["frontend", "feature"],
+			"f-url": null
+		},
+		{
+			"id": "rec-006",
+			"f-title": "Database backup script",
+			"f-status": "Done",
+			"f-priority": "High",
+			"f-due": "2026-02-15",
+			"f-effort": 3,
+			"f-done": true,
+			"f-tags": ["backend"],
+			"f-url": null
+		}
+	]
+}

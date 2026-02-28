@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(SOGO_GLOBAL_PATH=~/.sogo/globalDatabases SOGO_WORKSPACE_PATH=. node:*)",
+      "mcp__sogo-db__list_databases",
+      "mcp__sogo-db__list_records",
+      "mcp__sogo-db__search_records"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "github"
+  ]
+}

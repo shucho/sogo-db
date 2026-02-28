@@ -3,20 +3,18 @@
 		"target": "ES2022",
 		"module": "ES2022",
 		"moduleResolution": "bundler",
-		"lib": ["ES2022"],
+		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
-		"declaration": true,
-		"declarationMap": true,
+		"isolatedModules": true,
+		"declaration": false,
 		"sourceMap": true,
-		"isolatedModules": true
+		"jsx": "react-jsx",
+		"outDir": "dist",
+		"rootDir": "src"
 	},
-	"references": [
-		{ "path": "packages/core" },
-		{ "path": "packages/mcp-server" },
-		{ "path": "packages/extension" }
-	]
+	"include": ["src/webview/**/*.ts", "src/webview/**/*.tsx"]
 }

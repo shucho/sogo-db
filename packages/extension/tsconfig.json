@@ -9,14 +9,11 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"resolveJsonModule": true,
-		"declaration": true,
-		"declarationMap": true,
+		"isolatedModules": true,
+		"declaration": false,
 		"sourceMap": true,
-		"isolatedModules": true
+		"outDir": "dist",
+		"rootDir": "src"
 	},
-	"references": [
-		{ "path": "packages/core" },
-		{ "path": "packages/mcp-server" },
-		{ "path": "packages/extension" }
-	]
+	"include": ["src/extension.ts", "src/host/**/*.ts"]
 }
