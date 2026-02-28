@@ -20,8 +20,19 @@
 	"engines": {
 		"vscode": "^1.96.0"
 	},
-	"categories": ["Other", "Visualization"],
-	"keywords": ["database", "notion", "kanban", "table", "json", "calendar", "gallery"],
+	"categories": [
+		"Other",
+		"Visualization"
+	],
+	"keywords": [
+		"database",
+		"notion",
+		"kanban",
+		"table",
+		"json",
+		"calendar",
+		"gallery"
+	],
 	"main": "./dist/extension.js",
 	"scripts": {
 		"build": "node esbuild.mjs",
@@ -138,6 +149,8 @@
 	"devDependencies": {
 		"@dnd-kit/core": "^6.3.1",
 		"@dnd-kit/sortable": "^10.0.0",
+		"@tailwindcss/cli": "^4.0.0",
+		"@tailwindcss/postcss": "^4.0.0",
 		"@tanstack/react-table": "^8.21.3",
 		"@tanstack/react-virtual": "^3.13.6",
 		"@types/node": "^22.0.0",
@@ -145,12 +158,11 @@
 		"@types/react-dom": "^19.0.0",
 		"@types/vscode": "^1.96.0",
 		"esbuild": "^0.25.0",
+		"marked": "^17.0.3",
+		"postcss": "^8.5.0",
 		"react": "^19.0.0",
 		"react-dom": "^19.0.0",
 		"tailwindcss": "^4.0.0",
-		"@tailwindcss/cli": "^4.0.0",
-		"@tailwindcss/postcss": "^4.0.0",
-		"postcss": "^8.5.0",
 		"typescript": "^5.7.0",
 		"vitest": "^3.0.0"
 	}

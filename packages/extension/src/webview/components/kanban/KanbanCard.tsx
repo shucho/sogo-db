@@ -10,14 +10,15 @@
 import { useDraggable } from '@dnd-kit/core';
 import type { Database, DBRecord } from 'sogo-db-core';
 import { getRecordTitle } from 'sogo-db-core';
-import { postCommand } from '../../hooks/useVSCodeApi.js';
+
 
 interface KanbanCardProps {
 	record: DBRecord;
 	database: Database;
+	onOpenRecord: (recordId: string) => void;
 }
 
-export function KanbanCard({ record, database }: KanbanCardProps) {
+export function KanbanCard({ record, database, onOpenRecord }: KanbanCardProps) {
 	const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
 		id: record.id,
 	});
@@ -42,7 +43,7 @@ export function KanbanCard({ record, database }: KanbanCardProps) {
 				border: '1px solid var(--vscode-panel-border)',
 				...style,
 			}}
-			onClick={() => postCommand({ type: 'open-record', recordId: record.id })}
+			onClick={() => onOpenRecord(record.id)}
 		>
 			{title}
 		</div>

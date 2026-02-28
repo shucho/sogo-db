@@ -16,7 +16,7 @@ import { KanbanView } from './components/kanban/KanbanView.js';
 import { CalendarView } from './components/calendar/CalendarView.js';
 import { GalleryView } from './components/gallery/GalleryView.js';
 import { ListView } from './components/list/ListView.js';
-import { RecordEditor } from './components/record/RecordEditor.js';
+import { PeekPanel } from './components/record/PeekPanel.js';
 import { SchemaEditor } from './components/schema/SchemaEditor.js';
 import { Spinner } from './components/shared/Spinner.js';
 import { EmptyState } from './components/shared/EmptyState.js';
@@ -30,26 +30,26 @@ export function App() {
 	if (!database) return <EmptyState title="No database loaded" />;
 	if (!activeView) return <EmptyState title="No view available" />;
 
-	// Listen for open-record messages from child components
-	// (they use postCommand which goes to the host, but we also handle locally)
-	const editingRecord = editingRecordId
+	const peekRecord = editingRecordId
 		? database.records.find((r) => r.id === editingRecordId)
 		: null;
+
+	const onOpenRecord = (recordId: string) => setEditingRecordId(recordId);
 
 	function renderView() {
 		if (!database || !activeView) return null;
 
 		switch (activeView.type) {
 			case 'table':
-				return <TableView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
+				return <TableView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} onOpenRecord={onOpenRecord} />;
 			case 'kanban':
-				return <KanbanView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
+				return <KanbanView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} onOpenRecord={onOpenRecord} />;
 			case 'calendar':
-				return <CalendarView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
+				return <CalendarView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} onOpenRecord={onOpenRecord} />;
 			case 'gallery':
-				return <GalleryView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
+				return <GalleryView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} onOpenRecord={onOpenRecord} />;
 			case 'list':
-				return <ListView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} />;
+				return <ListView database={database} view={activeView} records={processedRecords} relationTitles={relationTitles} onOpenRecord={onOpenRecord} />;
 			default:
 				return <EmptyState title={`Unknown view type: ${activeView.type}`} />;
 		}
@@ -83,9 +83,9 @@ export function App() {
 				{processedRecords.length} records
 			</div>
 
-			{editingRecord && (
-				<RecordEditor
-					record={editingRecord}
+			{peekRecord && (
+				<PeekPanel
+					record={peekRecord}
 					database={database}
 					relationTitles={relationTitles}
 					onClose={() => setEditingRecordId(null)}

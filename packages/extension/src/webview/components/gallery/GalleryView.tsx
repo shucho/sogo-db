@@ -17,9 +17,10 @@ interface GalleryViewProps {
 	view: DBView;
 	records: DBRecord[];
 	relationTitles?: Record<string, string>;
+	onOpenRecord: (recordId: string) => void;
 }
 
-export function GalleryView({ database, view, records }: GalleryViewProps) {
+export function GalleryView({ database, view, records, onOpenRecord }: GalleryViewProps) {
 	if (records.length === 0) {
 		return (
 			<EmptyState
@@ -46,7 +47,7 @@ export function GalleryView({ database, view, records }: GalleryViewProps) {
 							backgroundColor: 'var(--vscode-editor-background)',
 							border: '1px solid var(--vscode-panel-border)',
 						}}
-						onClick={() => postCommand({ type: 'open-record', recordId: record.id })}
+						onClick={() => onOpenRecord(record.id)}
 					>
 						<div className="font-medium text-sm mb-2 truncate">{title}</div>
 						{cardFields.map((field) => {

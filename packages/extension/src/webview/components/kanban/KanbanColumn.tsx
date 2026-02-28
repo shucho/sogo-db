@@ -18,9 +18,10 @@ interface KanbanColumnProps {
 	records: DBRecord[];
 	groupField: Field;
 	database: Database;
+	onOpenRecord: (recordId: string) => void;
 }
 
-export function KanbanColumn({ columnValue, label, records, groupField, database }: KanbanColumnProps) {
+export function KanbanColumn({ columnValue, label, records, groupField, database, onOpenRecord }: KanbanColumnProps) {
 	const { setNodeRef, isOver } = useDroppable({ id: columnValue });
 
 	const headerColor =
@@ -50,7 +51,7 @@ export function KanbanColumn({ columnValue, label, records, groupField, database
 			</div>
 			<div className="flex-1 px-2 pb-2 space-y-1.5 overflow-y-auto min-h-[60px]">
 				{records.map((record) => (
-					<KanbanCard key={record.id} record={record} database={database} />
+					<KanbanCard key={record.id} record={record} database={database} onOpenRecord={onOpenRecord} />
 				))}
 			</div>
 		</div>

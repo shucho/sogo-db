@@ -25,7 +25,7 @@ export function TableCell({ record, field, database, relationTitles, onStartEdit
 
 	// Non-editable computed fields
 	if (field.type === 'formula' || field.type === 'rollup' || field.type === 'createdAt' || field.type === 'lastEditedAt') {
-		return <span className="opacity-60">{displayValue}</span>;
+		return <span style={{ opacity: 0.5 }}>{displayValue}</span>;
 	}
 
 	const handleClick = () => onStartEdit();
@@ -33,41 +33,51 @@ export function TableCell({ record, field, database, relationTitles, onStartEdit
 	switch (field.type) {
 		case 'checkbox':
 			return (
-				<span className="cursor-pointer" onClick={handleClick}>
-					{value === true ? '\u2705' : '\u2B1C'}
+				<span className="cursor-pointer flex items-center" onClick={handleClick}>
+					{value === true ? (
+						<svg width="14" height="14" viewBox="0 0 16 16" fill="var(--vscode-focusBorder)">
+							<rect x="1" y="1" width="14" height="14" rx="2" />
+							<path d="M6.5 11.5l-3-3 1-1L6.5 9.5l5-5 1 1-6 6z" fill="var(--vscode-editor-background)" />
+						</svg>
+					) : (
+						<svg width="14" height="14" viewBox="0 0 16 16">
+							<rect x="1.5" y="1.5" width="13" height="13" rx="2" fill="none"
+								stroke="var(--vscode-foreground)" strokeOpacity="0.3" />
+						</svg>
+					)}
 				</span>
 			);
 		case 'status':
 			return displayValue ? (
 				<Badge label={displayValue} color={getStatusColor(displayValue)} onClick={handleClick} />
 			) : (
-				<span className="cursor-pointer opacity-30" onClick={handleClick}>&mdash;</span>
+				<span className="cursor-pointer" style={{ opacity: 0.25 }} onClick={handleClick}>&mdash;</span>
 			);
 		case 'select':
 			return displayValue ? (
 				<Badge label={displayValue} color={getFieldOptionColor(field, displayValue)} onClick={handleClick} />
 			) : (
-				<span className="cursor-pointer opacity-30" onClick={handleClick}>&mdash;</span>
+				<span className="cursor-pointer" style={{ opacity: 0.25 }} onClick={handleClick}>&mdash;</span>
 			);
 		case 'multiselect': {
 			const values = Array.isArray(value) ? value : [];
 			return (
-				<div className="flex gap-0.5 flex-wrap cursor-pointer" onClick={handleClick}>
+				<div className="flex gap-1 flex-wrap cursor-pointer" onClick={handleClick}>
 					{values.map((v) => (
 						<Badge key={v} label={v} color={getFieldOptionColor(field, v)} />
 					))}
-					{values.length === 0 && <span className="opacity-30">&mdash;</span>}
+					{values.length === 0 && <span style={{ opacity: 0.25 }}>&mdash;</span>}
 				</div>
 			);
 		}
 		case 'relation': {
 			const ids = Array.isArray(value) ? value : [];
 			return (
-				<div className="flex gap-0.5 flex-wrap cursor-pointer" onClick={handleClick}>
+				<div className="flex gap-1 flex-wrap">
 					{ids.map((id) => (
-						<Badge key={id} label={relationTitles?.[id] ?? id.slice(0, 8)} color="#4b5563" />
+						<Badge key={id} label={relationTitles?.[id] ?? id.slice(0, 8)} />
 					))}
-					{ids.length === 0 && <span className="opacity-30">&mdash;</span>}
+					{ids.length === 0 && <span style={{ opacity: 0.25 }}>&mdash;</span>}
 				</div>
 			);
 		}
@@ -82,7 +92,7 @@ export function TableCell({ record, field, database, relationTitles, onStartEdit
 					{displayValue}
 				</a>
 			) : (
-				<span className="cursor-pointer opacity-30" onClick={handleClick}>&mdash;</span>
+				<span className="cursor-pointer" style={{ opacity: 0.25 }} onClick={handleClick}>&mdash;</span>
 			);
 		default:
 			return (
@@ -91,7 +101,7 @@ export function TableCell({ record, field, database, relationTitles, onStartEdit
 					onClick={handleClick}
 					title={displayValue}
 				>
-					{displayValue || <span className="opacity-30">&mdash;</span>}
+					{displayValue || <span style={{ opacity: 0.25 }}>&mdash;</span>}
 				</span>
 			);
 	}

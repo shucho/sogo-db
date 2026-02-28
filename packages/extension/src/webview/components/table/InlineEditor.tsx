@@ -9,7 +9,9 @@
 
 import { useState, useRef, useEffect } from 'react';
 import type { Database, DBRecord, Field } from 'sogo-db-core';
-import { STATUS_OPTIONS } from 'sogo-db-core';
+import { STATUS_OPTIONS, getStatusColor, getFieldOptionColor } from 'sogo-db-core';
+import { Badge } from '../shared/Badge.js';
+import { PickerDropdown } from '../shared/PickerDropdown.js';
 
 interface InlineEditorProps {
 	record: DBRecord;
@@ -95,51 +97,36 @@ export function InlineEditor({ record, field, onSave, onCancel }: InlineEditorPr
 				/>
 			);
 
-		case 'status': {
-			const options = STATUS_OPTIONS as readonly string[];
+		case 'status':
 			return (
-				<select
-					ref={inputRef as React.RefObject<HTMLSelectElement>}
-					className="w-full rounded px-1 py-0.5 text-xs"
-					style={inputStyle}
-					defaultValue={(currentValue as string) ?? ''}
-					onBlur={(e) => onSave(e.target.value || null)}
-					onChange={(e) => onSave(e.target.value || null)}
-				>
-					<option value="">—</option>
-					{options.map((opt) => (
-						<option key={opt} value={opt}>{opt}</option>
-					))}
-				</select>
+				<InlinePillPicker
+					options={[...STATUS_OPTIONS]}
+					value={(currentValue as string) ?? null}
+					getColor={getStatusColor}
+					onSave={onSave}
+					onCancel={onCancel}
+				/>
 			);
-		}
 
-		case 'select': {
-			const options = field.options ?? [];
+		case 'select':
 			return (
-				<select
-					ref={inputRef as React.RefObject<HTMLSelectElement>}
-					className="w-full rounded px-1 py-0.5 text-xs"
-					style={inputStyle}
-					defaultValue={(currentValue as string) ?? ''}
-					onBlur={(e) => onSave(e.target.value || null)}
-					onChange={(e) => onSave(e.target.value || null)}
-				>
-					<option value="">—</option>
-					{options.map((opt) => (
-						<option key={opt} value={opt}>{opt}</option>
-					))}
-				</select>
+				<InlinePillPicker
+					options={field.options ?? []}
+					value={(currentValue as string) ?? null}
+					getColor={(opt) => getFieldOptionColor(field, opt)}
+					onSave={onSave}
+					onCancel={onCancel}
+				/>
 			);
-		}
 
 		case 'multiselect': {
 			const options = field.options ?? [];
 			const selected = Array.isArray(currentValue) ? currentValue : [];
 			return (
-				<MultiSelectEditor
+				<InlineMultiPillPicker
 					options={options}
 					selected={selected}
+					getColor={(opt) => getFieldOptionColor(field, opt)}
 					onSave={onSave}
 					onCancel={onCancel}
 				/>
@@ -165,48 +152,94 @@ export function InlineEditor({ record, field, onSave, onCancel }: InlineEditorPr
 	}
 }
 
-function MultiSelectEditor({
+/* ─── Inline pill picker for status/select ──────────── */
+
+function InlinePillPicker({
+	options,
+	value,
+	getColor,
+	onSave,
+	onCancel,
+}: {
+	options: string[];
+	value: string | null;
+	getColor: (opt: string) => string;
+	onSave: (value: string | null) => void;
+	onCancel: () => void;
+}) {
+	const [anchor, setAnchor] = useState<HTMLDivElement | null>(null);
+
+	return (
+		<>
+			<div ref={setAnchor} className="flex items-center min-h-[24px]">
+				{value ? (
+					<Badge label={value} color={getColor(value)} />
+				) : (
+					<span style={{ opacity: 0.25 }}>&mdash;</span>
+				)}
+			</div>
+			{anchor && (
+				<PickerDropdown
+					anchor={anchor}
+					options={options}
+					selected={value ? [value] : []}
+					getColor={getColor}
+					onToggle={(opt) => onSave(opt === value ? null : opt)}
+					onClose={onCancel}
+				/>
+			)}
+		</>
+	);
+}
+
+/* ─── Inline multi-pill picker for multiselect ──────── */
+
+function InlineMultiPillPicker({
 	options,
 	selected,
+	getColor,
 	onSave,
 	onCancel,
 }: {
 	options: string[];
 	selected: string[];
+	getColor: (opt: string) => string;
 	onSave: (value: string[]) => void;
 	onCancel: () => void;
 }) {
+	const [anchor, setAnchor] = useState<HTMLDivElement | null>(null);
 	const [current, setCurrent] = useState<string[]>(selected);
-	const ref = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		function handleClickOutside(e: MouseEvent) {
-			if (ref.current && !ref.current.contains(e.target as Node)) {
-				onSave(current);
-			}
-		}
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, [current, onSave]);
+	const currentRef = useRef(current);
+	currentRef.current = current;
 
 	return (
-		<div ref={ref} className="flex flex-wrap gap-0.5">
-			{options.map((opt) => (
-				<label key={opt} className="flex items-center gap-1 text-xs cursor-pointer">
-					<input
-						type="checkbox"
-						checked={current.includes(opt)}
-						onChange={(e) => {
-							setCurrent(
-								e.target.checked
-									? [...current, opt]
-									: current.filter((v) => v !== opt),
-							);
-						}}
-					/>
-					{opt}
-				</label>
-			))}
-		</div>
+		<>
+			<div ref={setAnchor} className="flex flex-wrap gap-1 items-center min-h-[24px]">
+				{current.length > 0 ? (
+					current.map((opt) => (
+						<Badge key={opt} label={opt} color={getColor(opt)} />
+					))
+				) : (
+					<span style={{ opacity: 0.25 }}>&mdash;</span>
+				)}
+			</div>
+			{anchor && (
+				<PickerDropdown
+					anchor={anchor}
+					options={options}
+					selected={current}
+					multi
+					getColor={getColor}
+					onToggle={(opt) => {
+						setCurrent((prev) =>
+							prev.includes(opt)
+								? prev.filter((v) => v !== opt)
+								: [...prev, opt],
+						);
+					}}
+					onClose={() => onSave(currentRef.current)}
+				/>
+			)}
+		</>
 	);
 }

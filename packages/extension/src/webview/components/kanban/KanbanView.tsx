@@ -26,9 +26,10 @@ interface KanbanViewProps {
 	view: DBView;
 	records: DBRecord[];
 	relationTitles?: Record<string, string>;
+	onOpenRecord: (recordId: string) => void;
 }
 
-export function KanbanView({ database, view, records }: KanbanViewProps) {
+export function KanbanView({ database, view, records, onOpenRecord }: KanbanViewProps) {
 	const groupField = useMemo(
 		() => database.schema.find((f) => f.id === view.groupBy),
 		[database.schema, view.groupBy],
@@ -96,6 +97,7 @@ export function KanbanView({ database, view, records }: KanbanViewProps) {
 						records={col.records}
 						groupField={groupField}
 						database={database}
+						onOpenRecord={onOpenRecord}
 					/>
 				))}
 			</div>

@@ -17,9 +17,10 @@ interface ListViewProps {
 	view: DBView;
 	records: DBRecord[];
 	relationTitles?: Record<string, string>;
+	onOpenRecord: (recordId: string) => void;
 }
 
-export function ListView({ database, view, records }: ListViewProps) {
+export function ListView({ database, view, records, onOpenRecord }: ListViewProps) {
 	if (records.length === 0) {
 		return (
 			<EmptyState
@@ -41,7 +42,7 @@ export function ListView({ database, view, records }: ListViewProps) {
 						key={record.id}
 						className="flex items-center gap-3 px-4 py-2 border-b cursor-pointer hover:opacity-80"
 						style={{ borderColor: 'var(--vscode-panel-border)' }}
-						onClick={() => postCommand({ type: 'open-record', recordId: record.id })}
+						onClick={() => onOpenRecord(record.id)}
 					>
 						<span className="font-medium text-sm flex-1 truncate">{title}</span>
 						{summaryFields.map((field) => {

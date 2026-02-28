@@ -66,6 +66,9 @@ importers:
       esbuild:
         specifier: ^0.25.0
         version: 0.25.12
+      marked:
+        specifier: ^17.0.3
+        version: 17.0.3
       postcss:
         specifier: ^8.5.0
         version: 8.5.6
@@ -1885,6 +1888,11 @@ packages:
 
   markdown-it@14.1.1:
     resolution: {integrity: sha512-BuU2qnTti9YKgK5N+IeMubp14ZUKUUw7yeJbkjtosvHiP0AZ5c8IAgEMk79D0eC8F23r4Ac/q8cAIFdm2FtyoA==}
+    hasBin: true
+
+  marked@17.0.3:
+    resolution: {integrity: sha512-jt1v2ObpyOKR8p4XaUJVk3YWRJ5n+i4+rjQopxvV32rSndTJXvIzuUdWWIy/1pFQMkQmvTXawzDNqOH/CUmx6A==}
+    engines: {node: '>= 20'}
     hasBin: true
 
   math-intrinsics@1.1.0:
@@ -4335,6 +4343,8 @@ snapshots:
       mdurl: 2.0.0
       punycode.js: 2.3.1
       uc.micro: 2.1.0
+
+  marked@17.0.3: {}
 
   math-intrinsics@1.1.0: {}
 

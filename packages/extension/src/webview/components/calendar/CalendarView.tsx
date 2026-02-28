@@ -20,9 +20,10 @@ interface CalendarViewProps {
 	view: DBView;
 	records: DBRecord[];
 	relationTitles?: Record<string, string>;
+	onOpenRecord: (recordId: string) => void;
 }
 
-export function CalendarView({ database, view, records }: CalendarViewProps) {
+export function CalendarView({ database, view, records, onOpenRecord }: CalendarViewProps) {
 	const [month, setMonth] = useState(() => {
 		const now = new Date();
 		return { year: now.getFullYear(), month: now.getMonth() };
@@ -136,7 +137,7 @@ export function CalendarView({ database, view, records }: CalendarViewProps) {
 											backgroundColor: 'var(--vscode-badge-background)',
 											color: 'var(--vscode-badge-foreground)',
 										}}
-										onClick={() => postCommand({ type: 'open-record', recordId: record.id })}
+										onClick={() => onOpenRecord(record.id)}
 									>
 										{getRecordTitle(record, database.schema)}
 									</div>
