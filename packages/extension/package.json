@@ -1,15 +1,27 @@
 {
-	"name": "sogo-db",
-	"displayName": "Sogo DB",
+	"name": "sogo-lite",
+	"displayName": "Sogo Lite",
 	"description": "Notion-style databases in VS Code — view and edit .db.json files as tables, kanbans, calendars, and more",
 	"version": "0.1.0",
-	"publisher": "datarm",
+	"publisher": "shucho",
 	"license": "MIT",
+	"author": "DataRM",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/shucho/sogo-db.git",
+		"directory": "packages/extension"
+	},
+	"homepage": "https://github.com/shucho/sogo-db#readme",
+	"icon": "icon.png",
+	"galleryBanner": {
+		"color": "#1a1a2e",
+		"theme": "dark"
+	},
 	"engines": {
 		"vscode": "^1.96.0"
 	},
-	"categories": ["Other"],
-	"keywords": ["database", "notion", "kanban", "table", "json"],
+	"categories": ["Other", "Visualization"],
+	"keywords": ["database", "notion", "kanban", "table", "json", "calendar", "gallery"],
 	"main": "./dist/extension.js",
 	"scripts": {
 		"build": "node esbuild.mjs",
@@ -17,7 +29,8 @@
 		"typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.webview.json --noEmit",
 		"lint": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.webview.json --noEmit",
 		"test": "vitest run --passWithNoTests",
-		"package": "vsce package --no-dependencies"
+		"package": "vsce package --no-dependencies",
+		"publish": "vsce publish --no-dependencies"
 	},
 	"contributes": {
 		"customEditors": [

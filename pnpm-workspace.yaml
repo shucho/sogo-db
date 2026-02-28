@@ -4,3 +4,5 @@ packages:
 onlyBuiltDependencies:
   - esbuild
   - '@parcel/watcher'
+  - keytar
+  - '@vscode/vsce-sign'

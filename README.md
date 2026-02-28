@@ -1,26 +1,93 @@
-# sogo-db
+# Sogo Lite
 
-MCP server and core library for Sogo's built-in Notion-style databases.
+Notion-style databases inside VS Code. Create, view, and edit `.db.json` files as interactive tables, kanban boards, calendars, galleries, and lists — right in your editor.
 
-Gives AI agents (Claude Code, Cursor, Windsurf, VS Code Copilot) structured CRUD access to `.db.json` database files. Query, create, update, delete, and search records using human-readable field names — no UUIDs required.
+Pair it with the MCP server to give AI agents (Claude, Cursor, Copilot) full CRUD access to the same databases.
 
-## Quick Start
+## Install
 
-```bash
-git clone https://github.com/shucho/sogo-db.git
-cd sogo-db
-pnpm install
-pnpm -r build
+**VS Code Extension** — search "Sogo Lite" in the extensions panel, or:
+
+```
+ext install shucho.sogo-lite
 ```
 
-Then add the MCP server to your project's `.mcp.json`:
+**MCP Server** (optional, for AI agent access):
+
+```bash
+npx sogo-mcp-server
+```
+
+**Core Library** (if building on top of sogo-db):
+
+```bash
+npm install sogo-db-core
+```
+
+## How It Works
+
+Every database is a single `.db.json` file. Drop one in your project and the extension opens it as an interactive UI — no server, no config, no account.
+
+```jsonc
+{
+  "id": "uuid",
+  "name": "Tasks",
+  "schema": [
+    { "id": "f-title", "name": "Title", "type": "text" },
+    { "id": "f-status", "name": "Status", "type": "status" },
+    { "id": "f-due", "name": "Due Date", "type": "date" }
+  ],
+  "views": [
+    { "id": "v-table", "name": "All Tasks", "type": "table" }
+  ],
+  "records": [
+    { "id": "rec-001", "f-title": "Ship v1", "f-status": "In progress", "f-due": "2026-03-01" }
+  ]
+}
+```
+
+Databases live in two places:
+
+- **Global** (`~/.sogo/globalDatabases/`) — visible in every workspace. Use for CRM, clients, project tracking.
+- **Workspace** — any `.db.json` file in your project tree.
+
+Both show up in the Databases sidebar panel.
+
+## Views
+
+| View | What it does |
+|------|-------------|
+| **Table** | Spreadsheet-style grid with inline editing, sorting, filtering, column visibility |
+| **Kanban** | Drag-and-drop cards grouped by status or select fields |
+| **Calendar** | Month grid with records placed on date fields |
+| **Gallery** | Card grid with field summaries |
+| **List** | Compact row-based view |
+
+Switch between views with the tab bar. Each view has its own sort, filter, and field visibility settings.
+
+## Features
+
+- **Inline editing** — click any cell in table view to edit it
+- **Drag and drop** — move cards between kanban columns
+- **Record editor** — full-screen modal for editing all fields at once
+- **Schema editor** — add, remove, rename, and reorder fields
+- **Sort & filter** — multi-field sorting and filtering with operators (equals, contains, greater than, etc.)
+- **Field types** — text, number, select, multiselect, date, checkbox, url, email, phone, status, relation, rollup, formula, createdAt, lastEditedAt
+- **Create from command palette** — `Sogo DB: Create Database` scaffolds a new `.db.json`
+- **CSV import/export** — bring data in or out
+- **File watching** — external changes (git pull, AI edits) are picked up automatically
+- **Theme integration** — respects your VS Code color theme
+
+## MCP Server
+
+Give AI agents structured access to your databases. Add to your Claude Desktop config, `.mcp.json`, or Claude Code settings:
 
 ```json
 {
   "mcpServers": {
     "sogo-db": {
-      "command": "node",
-      "args": ["/path/to/sogo-db/packages/mcp-server/bin/sogo-mcp-server.js"],
+      "command": "npx",
+      "args": ["sogo-mcp-server"],
       "env": {
         "SOGO_GLOBAL_PATH": "~/.sogo/globalDatabases",
         "SOGO_WORKSPACE_PATH": "."
@@ -30,35 +97,7 @@ Then add the MCP server to your project's `.mcp.json`:
 }
 ```
 
-Restart your AI tool. The `sogo-db` tools are now available.
-
-## What are `.db.json` files?
-
-Sogo IDE has a built-in database panel — like Notion databases inside your editor. Each database is a single `.db.json` file:
-
-```jsonc
-{
-  "id": "uuid",
-  "name": "My Database",
-  "schema": [
-    { "id": "field-uuid", "name": "Title", "type": "text" },
-    { "id": "field-uuid", "name": "Status", "type": "status", "options": ["Not started", "In progress", "Done"] }
-  ],
-  "views": [
-    { "id": "view-uuid", "name": "All Items", "type": "table" }
-  ],
-  "records": [
-    { "id": "record-uuid", "field-uuid": "Acme Corp", "field-uuid": "In progress" }
-  ]
-}
-```
-
-Databases live in two places:
-
-- **Global** (`~/.sogo/globalDatabases/`) — visible in every workspace (CRM, clients, project tracking)
-- **Workspace** — any `.db.json` file in your project directory
-
-## MCP Tools
+### Tools
 
 | Tool | Description |
 |------|-------------|
@@ -70,55 +109,53 @@ Databases live in two places:
 | `delete_record` | Delete a record from a database |
 | `search_records` | Full-text search across databases |
 
-All tools accept **field names** (e.g., "Status", "Priority") instead of internal UUIDs. Database lookup is fuzzy — `"clients"` matches `"Clients"`, `"work"` matches `"Work Items"`.
+All tools accept **field names** (e.g., "Status", "Priority") — no UUIDs needed. Database lookup is fuzzy: `"clients"` matches `"Clients"`, `"work"` matches `"Work Items"`.
 
 ### Examples
 
-**List records with filtering:**
 ```
-list_records({ database: "Clients", filter: [{ field: "Status", op: "equals", value: "In progress" }] })
+list_records({ database: "Clients", filter: [{ field: "Status", op: "equals", value: "Active" }] })
+
+create_record({ database: "Tasks", values: { Title: "Review PR", Status: "Not started", Priority: "High" } })
+
+search_records({ query: "landing page" })
 ```
 
-**Search across all databases:**
-```
-search_records({ query: "interview" })
-```
-
-**Create a record:**
-```
-create_record({ database: "Work Items", values: { Task: "Review proposal", Status: "Not started", Priority: "High" } })
-```
-
-## Configuration
+### Configuration
 
 | Env Variable | Default | Description |
 |---|---|---|
 | `SOGO_GLOBAL_PATH` | `~/.sogo/globalDatabases` | Path to global databases directory |
 | `SOGO_WORKSPACE_PATH` | `.` (current directory) | Workspace root to scan for `.db.json` files |
-| `SOGO_SCAN_DEPTH` | `3` | How many directory levels deep to scan |
+| `SOGO_SCAN_DEPTH` | `3` | Directory levels deep to scan |
 
 ## Packages
 
-| Package | Description |
-|---------|-------------|
-| `sogo-db-core` | Types, utilities, sort/filter, formula engine, rollup engine, file I/O, schema migration, templates, CSV import/export |
-| `sogo-mcp-server` | MCP server with 7 tools, field name resolution, stdio transport |
+This is a pnpm monorepo with three packages:
 
-## Field Types
-
-`text`, `number`, `select`, `multiselect`, `date`, `checkbox`, `url`, `email`, `phone`, `status`, `relation`, `rollup`, `formula`, `createdAt`, `lastEditedAt`
-
-## View Types
-
-`table`, `kanban`, `list`, `gallery`, `calendar`
+| Package | npm | Description |
+|---------|-----|-------------|
+| `sogo-lite` | [Marketplace](https://marketplace.visualstudio.com/items?itemName=shucho.sogo-lite) | VS Code extension — visual editor for `.db.json` files |
+| `sogo-mcp-server` | [npm](https://www.npmjs.com/package/sogo-mcp-server) | MCP server — AI agent access via 7 tools |
+| `sogo-db-core` | [npm](https://www.npmjs.com/package/sogo-db-core) | Shared library — types, sort/filter, formulas, rollups, CSV, schema migration |
 
 ## Development
 
 ```bash
+git clone https://github.com/shucho/sogo-db.git
+cd sogo-db
 pnpm install
 pnpm -r build        # Build all packages
 pnpm -r typecheck    # TypeScript strict checking
-pnpm -r test         # Run all 116 tests
+pnpm -r test         # Run all 129 tests
+```
+
+**Test the extension:** Open the monorepo in VS Code and press F5. A new window opens with the test workspace loaded.
+
+**Release:**
+
+```bash
+pnpm release         # build + test + publish npm + package .vsix
 ```
 
 ## License

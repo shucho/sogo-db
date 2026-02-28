@@ -1,10 +1,13 @@
 .vscode/**
 src/**
 node_modules/**
+test-workspace/**
 tsconfig.json
 tsconfig.webview.json
 esbuild.mjs
-*.map
+_gen_icon.*
+**/*.map
 .gitignore
 vitest.config.*
 **/*.test.ts
+**/__tests__/**

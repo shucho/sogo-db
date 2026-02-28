@@ -1,7 +1,25 @@
 {
 	"name": "sogo-db-core",
 	"version": "0.1.0",
+	"description": "Core types and utilities for Sogo DB — Notion-style databases as .db.json files",
 	"type": "module",
+	"license": "MIT",
+	"author": "DataRM",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/shucho/sogo-db.git",
+		"directory": "packages/core"
+	},
+	"homepage": "https://github.com/shucho/sogo-db#readme",
+	"keywords": [
+		"database",
+		"notion",
+		"json",
+		"schema",
+		"records",
+		"csv",
+		"migration"
+	],
 	"main": "dist/index.cjs",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
