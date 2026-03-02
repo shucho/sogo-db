@@ -8,9 +8,9 @@
  */
 
 import type { Database, DatabaseResolver, DBRecord, DBView, Field } from './types.js';
-import { DEFAULT_OPTION_COLORS, STATUS_GROUPS } from './types.js';
 import { computeFormulaValue } from './formula.js';
 import { computeRollupValue } from './rollup.js';
+import { resolveStatusColor, resolveFieldOptionColor as _resolveFieldOptionColor } from './colors.js';
 
 export function getFieldValue(
 	record: DBRecord,
@@ -57,17 +57,14 @@ export function getVisibleFields(schema: Field[], view: DBView): Field[] {
 		.filter((f): f is Field => f !== undefined && !hidden.has(f.id));
 }
 
+/** @deprecated Use resolveStatusColor(value, theme) from colors.ts instead */
 export function getStatusColor(value: string): string {
-	return STATUS_GROUPS[value]?.color ?? '#5e5e5e';
+	return resolveStatusColor(value, 'dark');
 }
 
+/** @deprecated Use resolveFieldOptionColor(field, option, theme) from colors.ts instead */
 export function getFieldOptionColor(field: Field, option: string): string {
-	const explicit = field.optionColors?.[option];
-	if (explicit) return explicit;
-	const options = field.options ?? [];
-	const index = options.indexOf(option);
-	if (index >= 0) return DEFAULT_OPTION_COLORS[index % DEFAULT_OPTION_COLORS.length];
-	return DEFAULT_OPTION_COLORS[0];
+	return _resolveFieldOptionColor(field, option, 'dark');
 }
 
 export function getReadableTextColor(background: string): string {

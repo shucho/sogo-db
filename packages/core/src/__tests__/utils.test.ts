@@ -104,12 +104,12 @@ describe('getVisibleFields', () => {
 
 describe('getStatusColor', () => {
 	it('returns color for known status', () => {
-		expect(getStatusColor('In progress')).toBe('#2e75d0');
-		expect(getStatusColor('Done')).toBe('#2d9e6b');
+		expect(getStatusColor('In progress')).toBe('#3b82f6');
+		expect(getStatusColor('Done')).toBe('#30a46c');
 	});
 
 	it('returns default for unknown status', () => {
-		expect(getStatusColor('Unknown')).toBe('#5e5e5e');
+		expect(getStatusColor('Unknown')).toBe('#6b7280');
 	});
 });
 
@@ -119,9 +119,9 @@ describe('getFieldOptionColor', () => {
 		expect(getFieldOptionColor(field, 'A')).toBe('#ff0000');
 	});
 
-	it('returns default color by index', () => {
+	it('returns semantic color for known option', () => {
 		const color = getFieldOptionColor(selectField, 'Medium');
-		expect(color).toBe('#8b6b4a'); // index 1
+		expect(color).toBe('#f0a000'); // semantic: warning/dark
 	});
 });
 

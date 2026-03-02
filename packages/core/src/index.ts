@@ -17,3 +17,4 @@ export * from './io.js';
 export * from './migration.js';
 export * from './templates.js';
 export * from './csv.js';
+export * from './colors.js';
